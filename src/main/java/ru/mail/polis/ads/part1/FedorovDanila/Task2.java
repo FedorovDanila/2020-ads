@@ -1,4 +1,4 @@
-package ru.mail.polis.ads.FedorovDanila;
+package ru.mail.polis.ads.part1.FedorovDanila;
 
 import java.io.*;
 import java.util.ArrayList;

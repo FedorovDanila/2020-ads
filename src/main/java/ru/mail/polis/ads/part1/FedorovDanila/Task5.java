@@ -1,41 +1,42 @@
-package ru.mail.polis.ads.FedorovDanila;
+package ru.mail.polis.ads.part1.FedorovDanila;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-public class Task4 {
-    private static ArrayList<Integer> stack = new ArrayList<>();
+public class Task5 {
+    private static int[] queue = new int[100];
+    private static int beginIndex = 0;
+    private static int endIndex = 0;
+    private static int size = 0;
 
     private static void solve(final FastScanner in, final PrintWriter out) {
         while (true) {
             String command = in.next();
             switch (command) {
                 case ("push"):
-                    stack.add(in.nextInt());
+                    queue[endIndex++] = in.nextInt();
+                    ++size;
+                    if (endIndex == 100) {
+                        endIndex = 0;
+                    }
                     out.println("ok");
                     break;
                 case ("pop"):
-                    if (stack.size() == 0) {
-                        out.println("error");
-                    } else {
-                        int index = stack.size() - 1;
-                        out.println(stack.get(index));
-                        stack.remove(index);
+                    out.println(queue[beginIndex++]);
+                    --size;
+                    if (beginIndex == 100) {
+                        beginIndex = 0;
                     }
                     break;
-                case ("back"):
-                    if (stack.size() == 0) {
-                        out.println("error");
-                    } else {
-                        out.println(stack.get(stack.size() - 1));
-                    }
+                case ("front"):
+                    out.println(queue[beginIndex]);
                     break;
                 case ("size"):
-                    out.println(stack.size());
+                    out.println(size);
                     break;
                 case ("clear"):
-                    stack.clear();
+                    endIndex = beginIndex;
+                    size = 0;
                     out.println("ok");
                     break;
                 case ("exit"):
