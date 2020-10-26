@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+//  https://www.e-olymp.com/ru/submissions/7581099
 public class Task5 {
     private static void solve(final FastScanner in, final PrintWriter out) {
         int amount = in.nextInt();
@@ -23,8 +24,9 @@ public class Task5 {
             return 0;
         }
         int middle = (leftEdge + rightEdge) / 2;
-        return count(array, leftEdge, middle) + count(array, middle + 1, rightEdge)
-                + intersections(array, leftEdge, rightEdge);
+        int result = count(array, leftEdge, middle) + count(array, middle + 1, rightEdge);
+        result += intersections(array, leftEdge, rightEdge);
+        return result;
     }
 
     private static int intersections(ArrayList<Integer> array, int leftEdge, int rightEdge) {
@@ -36,7 +38,7 @@ public class Task5 {
         ArrayList<Integer> temp = new ArrayList<>(arraySize);
         for (int k = 0; k < arraySize; ++k) {
             int number;
-            if (j > rightEdge || array.get(j) > array.get(i)) {
+            if (i < middle + 1 && (j > rightEdge || array.get(j) > array.get(i))) {
                 number = array.get(i++);
             } else  {
                 number = array.get(j++);
