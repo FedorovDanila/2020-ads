@@ -1,8 +1,13 @@
 package ru.mail.polis.ads.part5.FedorovDanila;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.InputStream;
 import java.util.StringTokenizer;
 
+//  https://www.e-olymp.com/ru/submissions/7621893
 public class Task3 {
     private static void solve(final FastScanner in, final PrintWriter out) {
         long w = in.nextInt();
@@ -12,14 +17,14 @@ public class Task3 {
         long min = Math.max(h, w);
         long max = min * n;
         while (min < max) {
-            long middle = (max + min) / 2;
-            if (middle / h * middle / w < n) {
+            long middle = max / 2 + min / 2;
+            if ((middle / h) * (middle / w) < n) {
                 min = middle + 1;
             } else {
                 max = middle;
             }
         }
-        out.println(max);
+        out.println(min);
     }
 
     private static class FastScanner {

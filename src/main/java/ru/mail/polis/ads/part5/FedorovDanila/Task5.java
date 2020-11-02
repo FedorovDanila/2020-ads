@@ -7,27 +7,24 @@ import java.io.PrintWriter;
 import java.io.InputStream;
 import java.util.StringTokenizer;
 
-//  https://www.e-olymp.com/ru/submissions/7548622
-public class Task2 {
+//  https://www.e-olymp.com/ru/submissions/7622262
+public class Task5 {
     private static void solve(final FastScanner in, final PrintWriter out) {
-        int amount = in.nextInt();
-        int[] numbers = new int[amount];
-        for (int i = 0; i < amount; ++i) {
-            numbers[i] = in.nextInt();
-        }
-        int[] values = new int[amount];
-        int maxValue = 0;
-        for (int i = 0; i < amount; ++i) {
-            int value = 0;
-            for (int j = 0; j < i; ++j) {
-                if (numbers[j] != 0 && numbers[i] % numbers[j] == 0) {
-                    value = Math.max(value, values[j]);
-                }
+        double c = in.nextDouble();
+        double leftEdge = 0;
+        double rightEdge = 100000;
+        double eps = 0.0000001;
+        double x = (rightEdge + leftEdge) / 2;
+        while (rightEdge - leftEdge > eps) {
+
+            if (x * x + Math.sqrt(x) < c) {
+                leftEdge = x;
+            } else {
+                rightEdge = x;
             }
-            values[i] = value + 1;
-            maxValue = Math.max(maxValue, values[i]);
+            x = (rightEdge + leftEdge) / 2;
         }
-        out.println(maxValue);
+        System.out.println(x);
     }
 
     private static class FastScanner {
@@ -49,8 +46,8 @@ public class Task2 {
             return tokenizer.nextToken();
         }
 
-        int nextInt() {
-            return Integer.parseInt(next());
+        double nextDouble() {
+            return Double.parseDouble(next());
         }
     }
 
