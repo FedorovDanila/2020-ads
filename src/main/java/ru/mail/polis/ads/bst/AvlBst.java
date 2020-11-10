@@ -24,7 +24,6 @@ public class AvlBst<Key extends Comparable<Key>, Value>
 
     private Node root;
     private int size = 0;
-    private Value tempValue;
 
     @Override
     public Value get(@NotNull Key key) {
@@ -42,12 +41,12 @@ public class AvlBst<Key extends Comparable<Key>, Value>
 
     @Override
     public Value remove(@NotNull Key key) {
-        tempValue = null;
-        root = remove(root, key);
-        if (tempValue != null) {
+        Value value = get(key);
+        if (value != null) {
+            root = remove(root, key);
             --size;
         }
-        return tempValue;
+        return value;
     }
 
     @Override
@@ -184,7 +183,6 @@ public class AvlBst<Key extends Comparable<Key>, Value>
         } else if (root.key.compareTo(key) < 0) {
             root.right = remove(root.right, key);
         } else {
-            tempValue = root.value;
             if (root.left == null) {
                 return root.right;
             }
