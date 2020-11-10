@@ -14,60 +14,230 @@ public class AvlBst<Key extends Comparable<Key>, Value>
         Node left;
         Node right;
         int height;
+
+        Node(Key key, Value value) {
+            this.key = key;
+            this.value = value;
+            height = 1;
+        }
     }
+
+    private Node root;
+    private int size = 0;
+    private Value tempValue;
 
     @Override
     public Value get(@NotNull Key key) {
-        throw new UnsupportedOperationException("Implement me");
+        Node temp = root;
+        while (temp != null && !temp.key.equals(key)) {
+            temp = temp.key.compareTo(key) > 0 ? temp.left : temp.right;
+        }
+        return temp == null ? null : temp.value;
     }
 
     @Override
     public void put(@NotNull Key key, @NotNull Value value) {
-        throw new UnsupportedOperationException("Implement me");
+        root = put(root, key, value);
     }
 
     @Override
     public Value remove(@NotNull Key key) {
-        throw new UnsupportedOperationException("Implement me");
+        tempValue = null;
+        root = remove(root, key);
+        if (tempValue != null) {
+            --size;
+        }
+        return tempValue;
     }
 
     @Override
     public Key min() {
-        throw new UnsupportedOperationException("Implement me");
+        if (isEmpty()) {
+            return null;
+        }
+        return min(root).key;
     }
 
     @Override
     public Value minValue() {
-        throw new UnsupportedOperationException("Implement me");
+        if (isEmpty()) {
+            return null;
+        }
+        return min(root).value;
     }
 
     @Override
     public Key max() {
-        throw new UnsupportedOperationException("Implement me");
+        if (isEmpty()) {
+            return null;
+        }
+        return max(root).key;
     }
 
     @Override
     public Value maxValue() {
-        throw new UnsupportedOperationException("Implement me");
+        if (isEmpty()) {
+            return null;
+        }
+        return max(root).value;
     }
 
     @Override
     public Key floor(@NotNull Key key) {
-        throw new UnsupportedOperationException("Implement me");
+        Node node = floor(root, key);
+        return node == null ? null : node.key;
     }
 
     @Override
     public Key ceil(@NotNull Key key) {
-        throw new UnsupportedOperationException("Implement me");
+        Node node = ceil(root, key);
+        return node == null ? null : node.key;
     }
 
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Implement me");
+        return size;
     }
 
     @Override
     public int height() {
-        throw new UnsupportedOperationException("Implement me");
+        return height(root);
+    }
+
+    private int height(Node root) {
+        return  root == null ? 0 : root.height;
+    }
+
+    private void fixHeight(Node root) {
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+    }
+
+    private Node rotateLeft(Node root) {
+        Node child = root.right;
+        root.right = child.left;
+        child.left = root;
+        fixHeight(root);
+        fixHeight(child);
+        return child;
+    }
+
+    private Node rotateRight(Node root) {
+        Node child = root.left;
+        root.left = child.right;
+        child.right = root;
+        fixHeight(root);
+        fixHeight(child);
+        return child;
+    }
+
+    private int heightDifference(Node root) {
+        return height(root.left) - height(root.right);
+    }
+
+    private Node balance(Node root) {
+        if (heightDifference(root) == 2) {
+            if (heightDifference(root.left) < 0) {
+                root.left = rotateLeft(root.left);
+            }
+            return rotateRight(root);
+        } else if (heightDifference(root) == -2) {
+            if (heightDifference(root.right) > 0) {
+                root.right = rotateRight(root.right);
+            }
+            return rotateLeft(root);
+        }
+        return root;
+    }
+
+    private Node put(Node root, Key key, Value value) {
+        if (root == null) {
+            ++size;
+            return new Node(key, value);
+        } else if (root.key.compareTo(key) > 0) {
+            root.left = put(root.left, key, value);
+        } else if (root.key.compareTo(key) < 0) {
+            root.right = put(root.right, key, value);
+        } else {
+            root.value = value;
+        }
+        fixHeight(root);
+        root = balance(root);
+        return root;
+    }
+
+    private Node removeMin(Node root) {
+        if (root.left == null) {
+            return null;
+        }
+        root.left = removeMin(root.left);
+        fixHeight(root);
+        root = balance(root);
+        return root;
+    }
+
+    private Node remove(Node root, Key key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.key.compareTo(key) > 0) {
+            root.left = remove(root.left, key);
+        } else if (root.key.compareTo(key) < 0) {
+            root.right = remove(root.right, key);
+        } else {
+            tempValue = root.value;
+            if (root.left == null) {
+                return root.right;
+            }
+            if (root.right == null) {
+                return root.left;
+            }
+            Node temp = root;
+            root = min(temp.right);
+            root.right = removeMin(temp.right);
+            root.left = temp.left;
+        }
+        fixHeight(root);
+        root = balance(root);
+        return root;
+    }
+
+    private Node min(Node root) {
+        return root.left == null ? root : min(root.left);
+    }
+
+    private Node max(Node root) {
+        return root.right == null ? root : max(root.right);
+    }
+
+    private Node ceil(Node root, Key key) {
+        if (root == null || root.key.equals(key)) {
+            return root;
+        }
+
+        if (root.key.compareTo(key) < 0) {
+            return ceil(root.right, key);
+        }
+
+        Node temp = ceil(root.left, key);
+        if (temp == null || temp.key.compareTo(root.key) > 0) {
+            return root;
+        }
+        return temp;
+    }
+
+    private Node floor(Node root, Key key) {
+        if (root == null || root.key.equals(key)) {
+            return root;
+        }
+
+        if (root.key.compareTo(key) > 0) {
+            return floor(root.left, key);
+        }
+
+        Node temp = floor(root.right, key);
+        if (temp == null || temp.key.compareTo(root.key) < 0) {
+            return root;
+        }
+        return temp;
     }
 }
