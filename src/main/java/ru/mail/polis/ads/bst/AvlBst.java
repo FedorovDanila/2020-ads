@@ -134,12 +134,13 @@ public class AvlBst<Key extends Comparable<Key>, Value>
     }
 
     private Node balance(Node root) {
-        if (heightDifference(root) == 2) {
+        int diff = heightDifference(root);
+        if (diff == 2) {
             if (heightDifference(root.left) < 0) {
                 root.left = rotateLeft(root.left);
             }
             return rotateRight(root);
-        } else if (heightDifference(root) == -2) {
+        } else if (diff == -2) {
             if (heightDifference(root.right) > 0) {
                 root.right = rotateRight(root.right);
             }
@@ -152,13 +153,17 @@ public class AvlBst<Key extends Comparable<Key>, Value>
         if (root == null) {
             ++size;
             return new Node(key, value);
-        } else if (root.key.compareTo(key) > 0) {
+        }
+
+        int compareResult = root.key.compareTo(key);
+        if (compareResult > 0) {
             root.left = put(root.left, key, value);
-        } else if (root.key.compareTo(key) < 0) {
+        } else if (compareResult < 0) {
             root.right = put(root.right, key, value);
         } else {
             root.value = value;
         }
+
         fixHeight(root);
         root = balance(root);
         return root;
@@ -178,9 +183,11 @@ public class AvlBst<Key extends Comparable<Key>, Value>
         if (root == null) {
             return null;
         }
-        if (root.key.compareTo(key) > 0) {
+
+        int compareResult = root.key.compareTo(key);
+        if (compareResult > 0) {
             root.left = remove(root.left, key);
-        } else if (root.key.compareTo(key) < 0) {
+        } else if (compareResult < 0) {
             root.right = remove(root.right, key);
         } else {
             if (root.left == null) {
