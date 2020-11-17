@@ -32,12 +32,7 @@ public class RedBlackBst<Key extends Comparable<Key>, Value>
     @Nullable
     @Override
     public Value get(@NotNull Key key) {
-        Node temp = root;
-        while (temp != null && !temp.key.equals(key)) {
-            temp = temp.key.compareTo(key) > 0 ? temp.left : temp.right;
-        }
-        return temp == null ? null : temp.value;
-
+        return get(root, key);
     }
 
     @Override
@@ -155,6 +150,19 @@ public class RedBlackBst<Key extends Comparable<Key>, Value>
             return root;
         }
         return temp;
+    }
+
+    private Value get(Node root, Key key) {
+        if (root == null) {
+            return null;
+        }
+
+        int compareResult = root.key.compareTo(key);
+        if (compareResult == 0) {
+            return root.value;
+        } else {
+            return compareResult > 0 ? get(root.left, key) : get(root.right, key);
+        }
     }
 
     private Node rotateLeft(Node root) {
