@@ -27,11 +27,7 @@ public class AvlBst<Key extends Comparable<Key>, Value>
 
     @Override
     public Value get(@NotNull Key key) {
-        Node temp = root;
-        while (temp != null && !temp.key.equals(key)) {
-            temp = temp.key.compareTo(key) > 0 ? temp.left : temp.right;
-        }
-        return temp == null ? null : temp.value;
+        return get(root, key);
     }
 
     @Override
@@ -147,6 +143,19 @@ public class AvlBst<Key extends Comparable<Key>, Value>
             return rotateLeft(root);
         }
         return root;
+    }
+
+    private Value get(Node root, Key key) {
+        if (root == null) {
+            return null;
+        }
+
+        int compareResult = root.key.compareTo(key);
+        if (compareResult == 0) {
+            return root.value;
+        } else {
+            return compareResult > 0 ? get(root.left, key) : get(root.right, key);
+        }
     }
 
     private Node put(Node root, Key key, Value value) {
