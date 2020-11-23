@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Basic tests on {@link HashTable}.
  */
 class HashTableBaseTest {
+    private static final int INITIAL_SIZE = 10;
 
     HashTable<String, String> newTable() {
-        // Use implementation
-        return null;
+        return new MyHashTable<>(INITIAL_SIZE);
     }
 
     @Test
