@@ -1,5 +1,10 @@
 package ru.mail.polis.ads.hash;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,8 +18,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class HashTableBaseTest {
     private static final int INITIAL_SIZE = 10;
 
+    // Intentionally non-comparable
+    static class Key {
+        final String value;
+
+        public Key(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Key key = (Key) o;
+            return Objects.equals(value, key.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
+        }
+    }
+    
     HashTable<String, String> newTable() {
         return new MyHashTable<>(INITIAL_SIZE);
+    }
+    
+    HashTable<Key, String> newStrangeKeyTable() {
+        // Use implementation
+        return null;
     }
 
     @Test
@@ -192,5 +224,37 @@ class HashTableBaseTest {
 
         table.remove(new String("7"));
         assertNull(table.get(new String("7")));
+    }
+
+    @Test
+    void notComparableKey() {
+        HashTable<Key, String> table = newStrangeKeyTable();
+        HashMap<Key, String> reference = new HashMap<>();
+        for (int i = 0; i < 10000; i++) {
+            Key key = new Key(RandomStringUtils.random(3));
+            String value = RandomStringUtils.random(100);
+            table.put(key, value);
+            reference.put(key, value);
+        }
+        assertEquals(reference.size(), table.size());
+        for (Map.Entry<Key, String> entry: reference.entrySet()) {
+            assertEquals(entry.getValue(), table.get(new Key(entry.getKey().value)));
+        }
+    }
+
+    @Test
+    void manyCollisions() {
+        HashTable<Key, String> table = newStrangeKeyTable();
+        HashMap<Key, String> reference = new HashMap<>();
+        Key key = new Key("1");
+        for (int i = 0; i < 10000; i++) {
+            String value = RandomStringUtils.random(100);
+            table.put(key, value);
+            reference.put(key, value);
+        }
+        assertEquals(reference.size(), table.size());
+        for (Map.Entry<Key, String> entry: reference.entrySet()) {
+            assertEquals(entry.getValue(), table.get(new Key(entry.getKey().value)));
+        }
     }
 }
