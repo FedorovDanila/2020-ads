@@ -170,4 +170,27 @@ class HashTableBaseTest {
         assertEquals(table.get("7"), "testStringValue5");
         assertEquals(table.get("1"), "testStringValue2");
     }
+
+    @Test
+    void equalsUsed() {
+        HashTable<String, String> table = newTable();
+
+        assertNull(table.get("1"));
+
+        table.put(new String("1"), "testStringValue3");
+        assertEquals(table.get(new String("1")), "testStringValue3");
+
+        table.put(new String("1"), "testStringValue4");
+        assertEquals(table.get("1"), "testStringValue4");
+
+        table.put(new String("1"), "testStringValue2");
+        assertEquals(table.get(new String("1")), "testStringValue2");
+
+        table.put(new String("7"), "testStringValue5");
+        assertEquals(table.get(new String("7")), "testStringValue5");
+        assertEquals(table.get(new String("1")), "testStringValue2");
+
+        table.remove(new String("7"));
+        assertNull(table.get(new String("7")));
+    }
 }
