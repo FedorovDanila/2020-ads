@@ -109,7 +109,7 @@ public class MyHashTable<Key, Value> implements HashTable<Key, Value> {
     }
 
     private int countIndex(Key key) {
-        return key.hashCode() % size;
+        return Math.abs(key.hashCode() % size);
     }
 
     private void resize() {
