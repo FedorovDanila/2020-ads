@@ -44,9 +44,8 @@ class HashTableBaseTest {
         return new MyHashTable<>(INITIAL_SIZE);
     }
     
-    HashTable<Key, String> newStrangeKeyTable() {
-        // Use implementation
-        return null;
+    HashTable<Key, String> newStrangeKeyTable()  {
+        return new MyHashTable<>(INITIAL_SIZE);
     }
 
     @Test

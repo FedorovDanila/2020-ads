@@ -16,7 +16,7 @@ public class MyHashTable<Key, Value> implements HashTable<Key, Value> {
         }
     }
 
-    private static final double FACTOR = 0.6;
+    private static final double RESIZE_FACTOR = 0.6;
 
     private Elem<Key, Value>[] table;
     private int size;
@@ -56,7 +56,7 @@ public class MyHashTable<Key, Value> implements HashTable<Key, Value> {
         if (notEqual) {
             temp.next = new Elem<>(key, value);
             ++count;
-            if ((double)size / i > FACTOR) {
+            if ((double)i / size > RESIZE_FACTOR) {
                 resize();
             }
         } else {
